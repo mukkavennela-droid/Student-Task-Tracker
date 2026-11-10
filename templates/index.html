@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dashboard | Student Task Tracker
+{% endblock %}
+
+{% block page_title %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="page-heading">
+
+    <h2>
+        Welcome back! 👋
+    </h2>
+
+    <p>
+        Here's an overview of your academic tasks and progress.
+    </p>
+
+</div>
+
+
+<!-- =====================================================
+     STATISTICS
+===================================================== -->
+
+<div class="dashboard-grid">
+
+
+    <!-- TOTAL -->
+
+    <div class="dashboard-card">
+
+        <div class="dashboard-card-top">
+
+            <div>
+
+                <h3>
+                    {{ total }}
+                </h3>
+
+                <p>
+                    Total Tasks
+                </p>
+
+            </div>
+
+            <div
+                class="dashboard-card-icon"
+                style="background:#eef2ff;"
+            >
+                📝
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- COMPLETED -->
+
+    <div class="dashboard-card">
+
+        <div class="dashboard-card-top">
+
+            <div>
+
+                <h3>
+                    {{ completed }}
+                </h3>
+
+                <p>
+                    Completed Tasks
+                </p>
+
+            </div>
+
+            <div
+                class="dashboard-card-icon"
+                style="background:#dcfce7;"
+            >
+                ✅
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PENDING -->
+
+    <div class="dashboard-card">
+
+        <div class="dashboard-card-top">
+
+            <div>
+
+                <h3>
+                    {{ pending }}
+                </h3>
+
+                <p>
+                    Pending Tasks
+                </p>
+
+            </div>
+
+            <div
+                class="dashboard-card-icon"
+                style="background:#ffedd5;"
+            >
+                ⏳
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     OVERALL PROGRESS
+===================================================== -->
+
+<div class="progress-panel">
+
+    <div class="progress-panel-header">
+
+        <h3>
+            📊 Overall Progress
+        </h3>
+
+        <span class="progress-percent">
+            {{ progress }}%
+        </span>
+
+    </div>
+
+
+    <div class="progress-bar">
+
+        <div
+            class="progress-fill"
+            style="width: {{ progress }}%;"
+        >
+        </div>
+
+    </div>
+
+
+    <p class="progress-text">
+
+        {% if total > 0 %}
+
+            You have completed
+            <strong>{{ completed }}</strong>
+            out of
+            <strong>{{ total }}</strong>
+            tasks.
+
+        {% else %}
+
+            You haven't added any tasks yet.
+
+        {% endif %}
+
+    </p>
+
+</div>
+
+
+<!-- =====================================================
+     QUICK ACTIONS
+===================================================== -->
+
+<div class="page-heading" style="margin-top: 30px; margin-bottom: 15px;">
+
+    <h2 style="font-size:20px;">
+        Quick Actions
+    </h2>
+
+    <p>
+        Quickly access the most important parts of your task tracker.
+    </p>
+
+</div>
+
+
+<div class="quick-actions">
+
+
+    <!-- MY TASKS -->
+
+    <a
+        href="{{ url_for('tasks_page') }}"
+        class="quick-action"
+    >
+
+        <div class="quick-action-icon">
+            📝
+        </div>
+
+        <div>
+
+            <strong>
+                Manage My Tasks
+            </strong>
+
+            <span>
+                Add, edit, complete and organize your tasks.
+            </span>
+
+        </div>
+
+    </a>
+
+
+    <!-- DEADLINES -->
+
+    <a
+        href="{{ url_for('deadlines') }}"
+        class="quick-action"
+    >
+
+        <div
+            class="quick-action-icon"
+            style="background:#fff7ed;"
+        >
+            ⏰
+        </div>
+
+        <div>
+
+            <strong>
+                Check Deadlines
+            </strong>
+
+            <span>
+                View overdue and upcoming assignments.
+            </span>
+
+        </div>
+
+    </a>
+
+
+    <!-- ANALYTICS -->
+
+    <a
+        href="{{ url_for('analytics') }}"
+        class="quick-action"
+    >
+
+        <div
+            class="quick-action-icon"
+            style="background:#f0fdf4;"
+        >
+            📊
+        </div>
+
+        <div>
+
+            <strong>
+                View Analytics
+            </strong>
+
+            <span>
+                Understand your productivity and task progress.
+            </span>
+
+        </div>
+
+    </a>
+
+
+    <!-- ABOUT -->
+
+    <a
+        href="{{ url_for('about') }}"
+        class="quick-action"
+    >
+
+        <div
+            class="quick-action-icon"
+            style="background:#fdf4ff;"
+        >
+            ⚙️
+        </div>
+
+        <div>
+
+            <strong>
+                About Project
+            </strong>
+
+            <span>
+                Learn about the Student Task Tracker system.
+            </span>
+
+        </div>
+
+    </a>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,616 @@
+{% extends "base.html" %}
+
+{% block title %}
+Analytics | Student Task Tracker
+{% endblock %}
+
+{% block page_title %}
+Analytics
+{% endblock %}
+
+{% block content %}
+
+<!-- =====================================================
+     PAGE HEADER
+===================================================== -->
+
+<div class="page-heading">
+
+    <h2>
+        📊 Productivity Analytics
+    </h2>
+
+    <p>
+        Understand your task progress, priorities and academic workload.
+    </p>
+
+</div>
+
+
+<!-- =====================================================
+     OVERVIEW CARDS
+===================================================== -->
+
+<div class="analytics-overview">
+
+
+    <!-- TOTAL -->
+
+    <div class="analytics-card">
+
+        <div class="analytics-icon analytics-blue">
+            📝
+        </div>
+
+        <div>
+
+            <strong>
+                {{ total }}
+            </strong>
+
+            <span>
+                Total Tasks
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- COMPLETED -->
+
+    <div class="analytics-card">
+
+        <div class="analytics-icon analytics-green">
+            ✅
+        </div>
+
+        <div>
+
+            <strong>
+                {{ completed }}
+            </strong>
+
+            <span>
+                Completed
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- PENDING -->
+
+    <div class="analytics-card">
+
+        <div class="analytics-icon analytics-orange">
+            ⏳
+        </div>
+
+        <div>
+
+            <strong>
+                {{ pending }}
+            </strong>
+
+            <span>
+                Pending
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- COMPLETION -->
+
+    <div class="analytics-card">
+
+        <div class="analytics-icon analytics-purple">
+            🎯
+        </div>
+
+        <div>
+
+            <strong>
+                {{ completion_percentage }}%
+            </strong>
+
+            <span>
+                Completion Rate
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     MAIN ANALYTICS GRID
+===================================================== -->
+
+<div class="analytics-main-grid">
+
+
+    <!-- =================================================
+         COMPLETION OVERVIEW
+    ================================================= -->
+
+    <div class="analytics-panel">
+
+        <div class="analytics-panel-header">
+
+            <div>
+
+                <h3>
+                    🎯 Completion Overview
+                </h3>
+
+                <p>
+                    Your current task completion progress.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="completion-layout">
+
+
+            <!-- CIRCLE -->
+
+            <div
+                class="completion-circle"
+                style="--progress: {{ completion_percentage }}%;"
+            >
+
+                <div class="completion-circle-inner">
+
+                    <strong>
+                        {{ completion_percentage }}%
+                    </strong>
+
+                    <span>
+                        Completed
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- DETAILS -->
+
+            <div class="completion-details">
+
+                <div class="completion-row">
+
+                    <span>
+                        <i class="dot completed-dot"></i>
+                        Completed
+                    </span>
+
+                    <strong>
+                        {{ completed }}
+                    </strong>
+
+                </div>
+
+
+                <div class="completion-row">
+
+                    <span>
+                        <i class="dot pending-dot"></i>
+                        Pending
+                    </span>
+
+                    <strong>
+                        {{ pending }}
+                    </strong>
+
+                </div>
+
+
+                <div class="completion-row">
+
+                    <span>
+                        <i class="dot total-dot"></i>
+                        Total
+                    </span>
+
+                    <strong>
+                        {{ total }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         PRIORITY ANALYSIS
+    ================================================= -->
+
+    <div class="analytics-panel">
+
+        <div class="analytics-panel-header">
+
+            <div>
+
+                <h3>
+                    🚦 Priority Analysis
+                </h3>
+
+                <p>
+                    Distribution of your task priorities.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="priority-analytics">
+
+
+            <!-- HIGH -->
+
+            <div class="priority-row">
+
+                <div class="priority-row-top">
+
+                    <span>
+                        🔴 High Priority
+                    </span>
+
+                    <strong>
+                        {{ high }}
+                    </strong>
+
+                </div>
+
+                <div class="analytics-progress">
+
+                    {% if total > 0 %}
+
+                        <div
+                            class="analytics-progress-fill high-fill"
+                            style="width: {{ (high / total * 100)|round }}%;"
+                        >
+                        </div>
+
+                    {% else %}
+
+                        <div
+                            class="analytics-progress-fill high-fill"
+                            style="width: 0%;"
+                        >
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- MEDIUM -->
+
+            <div class="priority-row">
+
+                <div class="priority-row-top">
+
+                    <span>
+                        🟡 Medium Priority
+                    </span>
+
+                    <strong>
+                        {{ medium }}
+                    </strong>
+
+                </div>
+
+                <div class="analytics-progress">
+
+                    {% if total > 0 %}
+
+                        <div
+                            class="analytics-progress-fill medium-fill"
+                            style="width: {{ (medium / total * 100)|round }}%;"
+                        >
+                        </div>
+
+                    {% else %}
+
+                        <div
+                            class="analytics-progress-fill medium-fill"
+                            style="width: 0%;"
+                        >
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- LOW -->
+
+            <div class="priority-row">
+
+                <div class="priority-row-top">
+
+                    <span>
+                        🟢 Low Priority
+                    </span>
+
+                    <strong>
+                        {{ low }}
+                    </strong>
+
+                </div>
+
+                <div class="analytics-progress">
+
+                    {% if total > 0 %}
+
+                        <div
+                            class="analytics-progress-fill low-fill"
+                            style="width: {{ (low / total * 100)|round }}%;"
+                        >
+                        </div>
+
+                    {% else %}
+
+                        <div
+                            class="analytics-progress-fill low-fill"
+                            style="width: 0%;"
+                        >
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     SUBJECT ANALYSIS
+===================================================== -->
+
+<div class="analytics-panel subject-panel">
+
+    <div class="analytics-panel-header">
+
+        <div>
+
+            <h3>
+                📚 Subject-wise Workload
+            </h3>
+
+            <p>
+                Number of tasks assigned to each subject.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    {% if subject_counts %}
+
+        <div class="subject-list">
+
+            {% for subject, count in subject_counts.items() %}
+
+            <div
+                class="subject-row"
+                data-count="{{ count }}"
+            >
+
+                <div class="subject-info">
+
+                    <span class="subject-name">
+                        📖 {{ subject }}
+                    </span>
+
+                    <strong>
+                        {{ count }}
+                        {% if count == 1 %}
+                            task
+                        {% else %}
+                            tasks
+                        {% endif %}
+                    </strong>
+
+                </div>
+
+
+                <div class="subject-bar">
+
+                    <div class="subject-bar-fill">
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="analytics-empty">
+
+            <span>
+                📚
+            </span>
+
+            <h3>
+                No Subject Data
+            </h3>
+
+            <p>
+                Add some tasks to see subject-wise analytics.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+<!-- =====================================================
+     PRODUCTIVITY INSIGHT
+===================================================== -->
+
+<div class="insight-panel">
+
+    <div class="insight-icon">
+        💡
+    </div>
+
+    <div>
+
+        <h3>
+            Productivity Insight
+        </h3>
+
+        {% if total == 0 %}
+
+            <p>
+                Start adding your academic tasks to begin tracking
+                your productivity.
+            </p>
+
+        {% elif completion_percentage == 100 %}
+
+            <p>
+                Excellent work! 🎉 You have completed all your tasks.
+                Keep maintaining this productivity level.
+            </p>
+
+        {% elif completion_percentage >= 75 %}
+
+            <p>
+                Great progress! 🚀 You have completed most of your
+                tasks. Finish the remaining ones to reach 100%.
+            </p>
+
+        {% elif completion_percentage >= 50 %}
+
+            <p>
+                You're halfway there! 💪 Focus on your pending tasks
+                and keep pushing your completion rate higher.
+            </p>
+
+        {% else %}
+
+            <p>
+                You have several pending tasks. 📚 Try completing the
+                highest-priority tasks first to improve your progress.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+{% block scripts %}
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const rows =
+            document.querySelectorAll(
+                ".subject-row"
+            );
+
+
+        let maximum = 0;
+
+
+        /* Find highest task count */
+
+        rows.forEach(function (row) {
+
+            const count =
+                Number(
+                    row.dataset.count
+                );
+
+            if (count > maximum) {
+
+                maximum = count;
+
+            }
+
+        });
+
+
+        /* Create proportional bars */
+
+        rows.forEach(function (row) {
+
+            const count =
+                Number(
+                    row.dataset.count
+                );
+
+
+            const bar =
+                row.querySelector(
+                    ".subject-bar-fill"
+                );
+
+
+            if (maximum > 0) {
+
+                const percentage =
+                    (count / maximum) * 100;
+
+
+                bar.style.width =
+                    percentage + "%";
+
+            }
+
+        });
+
+    }
+
+);
+
+</script>
+
+{% endblock %}

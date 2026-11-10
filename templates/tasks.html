@@ -1,0 +1,856 @@
+{% extends "base.html" %}
+
+{% block title %}
+My Tasks | Student Task Tracker
+{% endblock %}
+
+{% block page_title %}
+My Tasks
+{% endblock %}
+
+{% block content %}
+
+<!-- =====================================================
+     PAGE HEADER
+===================================================== -->
+
+<div class="page-heading">
+
+    <h2>
+        📝 Manage Your Tasks
+    </h2>
+
+    <p>
+        Add, organize, filter and manage all your academic tasks.
+    </p>
+
+</div>
+
+
+<!-- =====================================================
+     TASK STATISTICS
+===================================================== -->
+
+<div class="dashboard-grid">
+
+
+    <div class="dashboard-card">
+
+        <div class="dashboard-card-top">
+
+            <div>
+
+                <h3>
+                    {{ total }}
+                </h3>
+
+                <p>
+                    Total Tasks
+                </p>
+
+            </div>
+
+            <div
+                class="dashboard-card-icon"
+                style="background:#eef2ff;"
+            >
+                📝
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="dashboard-card">
+
+        <div class="dashboard-card-top">
+
+            <div>
+
+                <h3>
+                    {{ completed }}
+                </h3>
+
+                <p>
+                    Completed
+                </p>
+
+            </div>
+
+            <div
+                class="dashboard-card-icon"
+                style="background:#dcfce7;"
+            >
+                ✅
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="dashboard-card">
+
+        <div class="dashboard-card-top">
+
+            <div>
+
+                <h3>
+                    {{ pending }}
+                </h3>
+
+                <p>
+                    Pending
+                </p>
+
+            </div>
+
+            <div
+                class="dashboard-card-icon"
+                style="background:#ffedd5;"
+            >
+                ⏳
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     ADD TASK
+===================================================== -->
+
+<div class="content-panel">
+
+    <div class="panel-header">
+
+        <div>
+
+            <h3>
+                ➕ Add New Task
+            </h3>
+
+            <p>
+                Create a new assignment or academic activity.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <form
+        action="{{ url_for('add_task') }}"
+        method="POST"
+        class="task-form-new"
+    >
+
+        <div class="form-group">
+
+            <label>
+                Task Name
+            </label>
+
+            <input
+                type="text"
+                name="task"
+                placeholder="Example: Complete Python Assignment"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Subject
+            </label>
+
+            <input
+                type="text"
+                name="subject"
+                placeholder="Example: Python"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Due Date
+            </label>
+
+            <input
+                type="date"
+                name="due_date"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Priority
+            </label>
+
+            <select
+                name="priority"
+                required
+            >
+
+                <option value="High">
+                    🔴 High
+                </option>
+
+                <option
+                    value="Medium"
+                    selected
+                >
+                    🟡 Medium
+                </option>
+
+                <option value="Low">
+                    🟢 Low
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="primary-button"
+        >
+            ➕ Add Task
+        </button>
+
+    </form>
+
+</div>
+
+
+<!-- =====================================================
+     TASK LIST
+===================================================== -->
+
+<div class="content-panel task-list-panel">
+
+    <div class="panel-header">
+
+        <div>
+
+            <h3>
+                📋 Your Tasks
+            </h3>
+
+            <p>
+                Search, filter and organize your assignments.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         CONTROLS
+    ================================================= -->
+
+    <div class="task-controls-new">
+
+
+        <div class="search-box">
+
+            <span>
+                🔍
+            </span>
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search tasks or subjects..."
+                onkeyup="filterTasks()"
+            >
+
+        </div>
+
+
+        <select
+            id="statusFilter"
+            onchange="filterTasks()"
+        >
+
+            <option value="all">
+                All Tasks
+            </option>
+
+            <option value="pending">
+                Pending
+            </option>
+
+            <option value="completed">
+                Completed
+            </option>
+
+        </select>
+
+
+        <select
+            id="priorityFilter"
+            onchange="filterTasks()"
+        >
+
+            <option value="all">
+                All Priorities
+            </option>
+
+            <option value="High">
+                🔴 High
+            </option>
+
+            <option value="Medium">
+                🟡 Medium
+            </option>
+
+            <option value="Low">
+                🟢 Low
+            </option>
+
+        </select>
+
+
+        <select
+            id="sortFilter"
+            onchange="sortTasks()"
+        >
+
+            <option value="default">
+                Sort Tasks
+            </option>
+
+            <option value="due-asc">
+                Due Date ↑
+            </option>
+
+            <option value="due-desc">
+                Due Date ↓
+            </option>
+
+            <option value="name-asc">
+                Name A-Z
+            </option>
+
+            <option value="name-desc">
+                Name Z-A
+            </option>
+
+            <option value="priority">
+                Priority
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <!-- =================================================
+         TASKS
+    ================================================= -->
+
+    <div id="taskList">
+
+
+        {% if tasks %}
+
+
+            {% for task in tasks %}
+
+
+            <div
+                class="modern-task"
+                data-due="{{ task[3] }}"
+                data-priority="{{ task[5] }}"
+            >
+
+
+                <!-- TASK INFORMATION -->
+
+                <div class="task-main-info">
+
+
+                    <div class="task-title-row">
+
+                        <h3>
+                            {{ task[1] }}
+                        </h3>
+
+
+                        {% if task[5] == "High" %}
+
+                            <span class="priority priority-high">
+                                🔴 High
+                            </span>
+
+                        {% elif task[5] == "Low" %}
+
+                            <span class="priority priority-low">
+                                🟢 Low
+                            </span>
+
+                        {% else %}
+
+                            <span class="priority priority-medium">
+                                🟡 Medium
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <p class="task-subject">
+                        📚 {{ task[2] }}
+                    </p>
+
+
+                    <p class="task-date">
+                        📅 Due: {{ task[3] }}
+                    </p>
+
+
+                    <span
+                        class="deadline-status"
+                        data-due="{{ task[3] }}"
+                    >
+                    </span>
+
+                </div>
+
+
+                <!-- TASK ACTIONS -->
+
+                <div class="task-actions">
+
+
+                    {% if task[4] == 1 %}
+
+                        <span class="completed">
+                            ✅ Completed
+                        </span>
+
+                    {% else %}
+
+                        <a
+                            href="{{ url_for('complete_task', task_id=task[0]) }}"
+                            class="complete-btn"
+                        >
+                            ✓ Complete
+                        </a>
+
+                    {% endif %}
+
+
+                    <a
+                        href="{{ url_for('edit_task', task_id=task[0]) }}"
+                        class="edit-btn"
+                    >
+                        ✏️ Edit
+                    </a>
+
+
+                    <a
+                        href="{{ url_for('delete_task', task_id=task[0]) }}"
+                        class="delete-btn"
+                        onclick="return confirm('Are you sure you want to delete this task?');"
+                    >
+                        🗑️ Delete
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            {% endfor %}
+
+
+        {% else %}
+
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    📝
+                </div>
+
+                <h3>
+                    No Tasks Yet
+                </h3>
+
+                <p>
+                    Add your first academic task using the form above.
+                </p>
+
+            </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+{% block scripts %}
+
+<script>
+
+
+/* =====================================================
+   DEADLINE STATUS
+===================================================== */
+
+function getDateOnly(date) {
+
+    return new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate()
+    );
+
+}
+
+
+function checkDeadlines() {
+
+    const today =
+        getDateOnly(new Date());
+
+
+    const tomorrow =
+        new Date(today);
+
+
+    tomorrow.setDate(
+        tomorrow.getDate() + 1
+    );
+
+
+    const tasks =
+        document.querySelectorAll(".modern-task");
+
+
+    tasks.forEach(function(task) {
+
+
+        if (
+            task.querySelector(".completed")
+        ) {
+
+            return;
+
+        }
+
+
+        const due =
+            new Date(
+                task.dataset.due + "T00:00:00"
+            );
+
+
+        const status =
+            task.querySelector(".deadline-status");
+
+
+        if (due < today) {
+
+            status.textContent =
+                "🔴 Overdue";
+
+            status.className =
+                "deadline-status status-overdue";
+
+        }
+
+        else if (
+            due.getTime() ===
+            today.getTime()
+        ) {
+
+            status.textContent =
+                "🟠 Due Today";
+
+            status.className =
+                "deadline-status status-today";
+
+        }
+
+        else if (
+            due.getTime() ===
+            tomorrow.getTime()
+        ) {
+
+            status.textContent =
+                "🟡 Due Tomorrow";
+
+            status.className =
+                "deadline-status status-tomorrow";
+
+        }
+
+        else {
+
+            status.textContent =
+                "🔵 Upcoming";
+
+            status.className =
+                "deadline-status status-upcoming";
+
+        }
+
+    });
+
+}
+
+
+/* =====================================================
+   SEARCH + FILTER
+===================================================== */
+
+function filterTasks() {
+
+    const searchText =
+        document
+            .getElementById("searchInput")
+            .value
+            .toLowerCase();
+
+
+    const status =
+        document
+            .getElementById("statusFilter")
+            .value;
+
+
+    const priority =
+        document
+            .getElementById("priorityFilter")
+            .value;
+
+
+    const tasks =
+        document.querySelectorAll(".modern-task");
+
+
+    tasks.forEach(function(task) {
+
+
+        const taskText =
+            task.innerText.toLowerCase();
+
+
+        const taskPriority =
+            task.dataset.priority;
+
+
+        let taskStatus =
+            "pending";
+
+
+        if (
+            task.querySelector(".completed")
+        ) {
+
+            taskStatus =
+                "completed";
+
+        }
+
+
+        const searchMatch =
+            taskText.includes(searchText);
+
+
+        const statusMatch =
+            status === "all" ||
+            status === taskStatus;
+
+
+        const priorityMatch =
+            priority === "all" ||
+            priority === taskPriority;
+
+
+        if (
+            searchMatch &&
+            statusMatch &&
+            priorityMatch
+        ) {
+
+            task.style.display =
+                "flex";
+
+        }
+
+        else {
+
+            task.style.display =
+                "none";
+
+        }
+
+    });
+
+}
+
+
+/* =====================================================
+   SORT
+===================================================== */
+
+function sortTasks() {
+
+    const sortValue =
+        document
+            .getElementById("sortFilter")
+            .value;
+
+
+    const container =
+        document.getElementById("taskList");
+
+
+    const tasks =
+        Array.from(
+            document.querySelectorAll(".modern-task")
+        );
+
+
+    tasks.sort(function(a, b) {
+
+
+        if (
+            sortValue === "due-asc"
+        ) {
+
+            return new Date(a.dataset.due)
+                - new Date(b.dataset.due);
+
+        }
+
+
+        if (
+            sortValue === "due-desc"
+        ) {
+
+            return new Date(b.dataset.due)
+                - new Date(a.dataset.due);
+
+        }
+
+
+        if (
+            sortValue === "name-asc"
+        ) {
+
+            const nameA =
+                a.querySelector("h3")
+                .innerText
+                .toLowerCase();
+
+
+            const nameB =
+                b.querySelector("h3")
+                .innerText
+                .toLowerCase();
+
+
+            return nameA.localeCompare(nameB);
+
+        }
+
+
+        if (
+            sortValue === "name-desc"
+        ) {
+
+            const nameA =
+                a.querySelector("h3")
+                .innerText
+                .toLowerCase();
+
+
+            const nameB =
+                b.querySelector("h3")
+                .innerText
+                .toLowerCase();
+
+
+            return nameB.localeCompare(nameA);
+
+        }
+
+
+        if (
+            sortValue === "priority"
+        ) {
+
+            const priorityOrder = {
+
+                "High": 1,
+                "Medium": 2,
+                "Low": 3
+
+            };
+
+
+            return (
+                priorityOrder[a.dataset.priority]
+                -
+                priorityOrder[b.dataset.priority]
+            );
+
+        }
+
+
+        return 0;
+
+    });
+
+
+    tasks.forEach(function(task) {
+
+        container.appendChild(task);
+
+    });
+
+}
+
+
+/* =====================================================
+   START
+===================================================== */
+
+checkDeadlines();
+
+</script>
+
+{% endblock %}

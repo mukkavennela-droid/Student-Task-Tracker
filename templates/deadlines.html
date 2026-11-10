@@ -1,0 +1,591 @@
+{% extends "base.html" %}
+
+{% block title %}
+Deadlines | Student Task Tracker
+{% endblock %}
+
+{% block page_title %}
+Deadlines
+{% endblock %}
+
+{% block content %}
+
+<div class="page-heading">
+
+    <h2>
+        ⏰ Deadline Center
+    </h2>
+
+    <p>
+        Keep track of assignments that need your attention.
+    </p>
+
+</div>
+
+
+<!-- =====================================================
+     DEADLINE SUMMARY
+===================================================== -->
+
+<div class="deadline-summary">
+
+
+    <div class="deadline-summary-card overdue-summary">
+
+        <div class="deadline-summary-icon">
+            🔴
+        </div>
+
+        <div>
+
+            <strong>
+                {{ overdue|length }}
+            </strong>
+
+            <span>
+                Overdue
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="deadline-summary-card today-summary">
+
+        <div class="deadline-summary-icon">
+            🟠
+        </div>
+
+        <div>
+
+            <strong>
+                {{ due_today|length }}
+            </strong>
+
+            <span>
+                Due Today
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="deadline-summary-card tomorrow-summary">
+
+        <div class="deadline-summary-icon">
+            🟡
+        </div>
+
+        <div>
+
+            <strong>
+                {{ due_tomorrow|length }}
+            </strong>
+
+            <span>
+                Due Tomorrow
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="deadline-summary-card upcoming-summary">
+
+        <div class="deadline-summary-icon">
+            🔵
+        </div>
+
+        <div>
+
+            <strong>
+                {{ upcoming|length }}
+            </strong>
+
+            <span>
+                Upcoming
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     OVERDUE
+===================================================== -->
+
+<div class="deadline-section">
+
+
+    <div class="deadline-section-header overdue-header">
+
+        <div>
+
+            <h3>
+                🔴 Overdue Tasks
+            </h3>
+
+            <p>
+                These tasks have passed their due date.
+            </p>
+
+        </div>
+
+        <span>
+            {{ overdue|length }}
+        </span>
+
+    </div>
+
+
+    {% if overdue %}
+
+
+        {% for task in overdue %}
+
+
+        <div class="deadline-task overdue-task">
+
+            <div class="deadline-task-info">
+
+                <h4>
+                    {{ task[1] }}
+                </h4>
+
+                <p>
+                    📚 {{ task[2] }}
+                </p>
+
+                <p>
+                    📅 Due: {{ task[3] }}
+                </p>
+
+            </div>
+
+
+            <div class="deadline-task-actions">
+
+                {% if task[5] == "High" %}
+
+                    <span class="priority priority-high">
+                        🔴 High
+                    </span>
+
+                {% elif task[5] == "Low" %}
+
+                    <span class="priority priority-low">
+                        🟢 Low
+                    </span>
+
+                {% else %}
+
+                    <span class="priority priority-medium">
+                        🟡 Medium
+                    </span>
+
+                {% endif %}
+
+
+                <a
+                    href="{{ url_for('complete_task', task_id=task[0]) }}"
+                    class="complete-btn"
+                >
+                    ✓ Complete
+                </a>
+
+
+                <a
+                    href="{{ url_for('edit_task', task_id=task[0]) }}"
+                    class="edit-btn"
+                >
+                    ✏️ Edit
+                </a>
+
+            </div>
+
+        </div>
+
+
+        {% endfor %}
+
+
+    {% else %}
+
+        <div class="deadline-empty">
+
+            <span>
+                🎉
+            </span>
+
+            <p>
+                Great! You have no overdue tasks.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+<!-- =====================================================
+     DUE TODAY
+===================================================== -->
+
+<div class="deadline-section">
+
+
+    <div class="deadline-section-header today-header">
+
+        <div>
+
+            <h3>
+                🟠 Due Today
+            </h3>
+
+            <p>
+                Tasks that need to be completed today.
+            </p>
+
+        </div>
+
+        <span>
+            {{ due_today|length }}
+        </span>
+
+    </div>
+
+
+    {% if due_today %}
+
+
+        {% for task in due_today %}
+
+
+        <div class="deadline-task today-task">
+
+            <div class="deadline-task-info">
+
+                <h4>
+                    {{ task[1] }}
+                </h4>
+
+                <p>
+                    📚 {{ task[2] }}
+                </p>
+
+                <p>
+                    📅 Due today
+                </p>
+
+            </div>
+
+
+            <div class="deadline-task-actions">
+
+                {% if task[5] == "High" %}
+
+                    <span class="priority priority-high">
+                        🔴 High
+                    </span>
+
+                {% elif task[5] == "Low" %}
+
+                    <span class="priority priority-low">
+                        🟢 Low
+                    </span>
+
+                {% else %}
+
+                    <span class="priority priority-medium">
+                        🟡 Medium
+                    </span>
+
+                {% endif %}
+
+
+                <a
+                    href="{{ url_for('complete_task', task_id=task[0]) }}"
+                    class="complete-btn"
+                >
+                    ✓ Complete
+                </a>
+
+
+                <a
+                    href="{{ url_for('edit_task', task_id=task[0]) }}"
+                    class="edit-btn"
+                >
+                    ✏️ Edit
+                </a>
+
+            </div>
+
+        </div>
+
+
+        {% endfor %}
+
+
+    {% else %}
+
+        <div class="deadline-empty">
+
+            <span>
+                🎉
+            </span>
+
+            <p>
+                No tasks are due today.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+<!-- =====================================================
+     DUE TOMORROW
+===================================================== -->
+
+<div class="deadline-section">
+
+
+    <div class="deadline-section-header tomorrow-header">
+
+        <div>
+
+            <h3>
+                🟡 Due Tomorrow
+            </h3>
+
+            <p>
+                Prepare for these tasks in advance.
+            </p>
+
+        </div>
+
+        <span>
+            {{ due_tomorrow|length }}
+        </span>
+
+    </div>
+
+
+    {% if due_tomorrow %}
+
+
+        {% for task in due_tomorrow %}
+
+
+        <div class="deadline-task tomorrow-task">
+
+            <div class="deadline-task-info">
+
+                <h4>
+                    {{ task[1] }}
+                </h4>
+
+                <p>
+                    📚 {{ task[2] }}
+                </p>
+
+                <p>
+                    📅 Due tomorrow
+                </p>
+
+            </div>
+
+
+            <div class="deadline-task-actions">
+
+                {% if task[5] == "High" %}
+
+                    <span class="priority priority-high">
+                        🔴 High
+                    </span>
+
+                {% elif task[5] == "Low" %}
+
+                    <span class="priority priority-low">
+                        🟢 Low
+                    </span>
+
+                {% else %}
+
+                    <span class="priority priority-medium">
+                        🟡 Medium
+                    </span>
+
+                {% endif %}
+
+
+                <a
+                    href="{{ url_for('complete_task', task_id=task[0]) }}"
+                    class="complete-btn"
+                >
+                    ✓ Complete
+                </a>
+
+
+                <a
+                    href="{{ url_for('edit_task', task_id=task[0]) }}"
+                    class="edit-btn"
+                >
+                    ✏️ Edit
+                </a>
+
+            </div>
+
+        </div>
+
+
+        {% endfor %}
+
+
+    {% else %}
+
+        <div class="deadline-empty">
+
+            <span>
+                👍
+            </span>
+
+            <p>
+                Nothing is due tomorrow.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+<!-- =====================================================
+     UPCOMING
+===================================================== -->
+
+<div class="deadline-section">
+
+
+    <div class="deadline-section-header upcoming-header">
+
+        <div>
+
+            <h3>
+                🔵 Upcoming Tasks
+            </h3>
+
+            <p>
+                Tasks scheduled for the coming days.
+            </p>
+
+        </div>
+
+        <span>
+            {{ upcoming|length }}
+        </span>
+
+    </div>
+
+
+    {% if upcoming %}
+
+
+        {% for task in upcoming %}
+
+
+        <div class="deadline-task upcoming-task">
+
+            <div class="deadline-task-info">
+
+                <h4>
+                    {{ task[1] }}
+                </h4>
+
+                <p>
+                    📚 {{ task[2] }}
+                </p>
+
+                <p>
+                    📅 Due: {{ task[3] }}
+                </p>
+
+            </div>
+
+
+            <div class="deadline-task-actions">
+
+                {% if task[5] == "High" %}
+
+                    <span class="priority priority-high">
+                        🔴 High
+                    </span>
+
+                {% elif task[5] == "Low" %}
+
+                    <span class="priority priority-low">
+                        🟢 Low
+                    </span>
+
+                {% else %}
+
+                    <span class="priority priority-medium">
+                        🟡 Medium
+                    </span>
+
+                {% endif %}
+
+
+                <a
+                    href="{{ url_for('complete_task', task_id=task[0]) }}"
+                    class="complete-btn"
+                >
+                    ✓ Complete
+                </a>
+
+
+                <a
+                    href="{{ url_for('edit_task', task_id=task[0]) }}"
+                    class="edit-btn"
+                >
+                    ✏️ Edit
+                </a>
+
+            </div>
+
+        </div>
+
+
+        {% endfor %}
+
+
+    {% else %}
+
+        <div class="deadline-empty">
+
+            <span>
+                📅
+            </span>
+
+            <p>
+                No upcoming tasks right now.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+{% endblock %}

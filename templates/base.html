@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}
+        Student Task Tracker
+        {% endblock %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+    <div class="app-layout">
+
+
+        <!-- =========================
+             SIDEBAR
+        ========================= -->
+
+        <aside class="sidebar">
+
+            <div class="sidebar-brand">
+
+                <div class="brand-icon">
+                    📚
+                </div>
+
+                <div>
+
+                    <h2>
+                        Student
+                    </h2>
+
+                    <span>
+                        Task Tracker
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- NAVIGATION -->
+
+            <nav class="sidebar-nav">
+
+
+                <a
+                    href="{{ url_for('home') }}"
+                    class="nav-item {% if request.endpoint == 'home' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        🏠
+                    </span>
+
+                    <span>
+                        Dashboard
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('tasks_page') }}"
+                    class="nav-item {% if request.endpoint == 'tasks_page' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        📝
+                    </span>
+
+                    <span>
+                        My Tasks
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('deadlines') }}"
+                    class="nav-item {% if request.endpoint == 'deadlines' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        ⏰
+                    </span>
+
+                    <span>
+                        Deadlines
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('analytics') }}"
+                    class="nav-item {% if request.endpoint == 'analytics' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        📊
+                    </span>
+
+                    <span>
+                        Analytics
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('about') }}"
+                    class="nav-item {% if request.endpoint == 'about' %}active{% endif %}"
+                >
+
+                    <span class="nav-icon">
+                        ⚙️
+                    </span>
+
+                    <span>
+                        About
+                    </span>
+
+                </a>
+
+            </nav>
+
+
+            <!-- SIDEBAR BOTTOM -->
+
+            <div class="sidebar-bottom">
+
+                <div class="product-badge">
+
+                    <div class="badge-icon">
+                        🎓
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Student Productivity
+                        </strong>
+
+                        <span>
+                            Stay organized & focused
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =========================
+             MAIN AREA
+        ========================= -->
+
+        <main class="main-content">
+
+
+            <!-- TOP BAR -->
+
+            <header class="topbar">
+
+                <div>
+
+                    <span class="topbar-label">
+                        STUDENT PRODUCTIVITY SYSTEM
+                    </span>
+
+                    <h1>
+                        {% block page_title %}
+                        Student Task Tracker
+                        {% endblock %}
+                    </h1>
+
+                </div>
+
+
+                <div class="topbar-right">
+
+                    <div class="date-display">
+
+                        📅
+
+                        <span id="currentDate">
+                            Today
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- PAGE CONTENT -->
+
+            <section class="page-content">
+
+                {% block content %}
+
+                {% endblock %}
+
+            </section>
+            <footer class="site-footer">
+
+    <div>
+        © 2026 Student Task Tracker
+    </div>
+
+    <div>
+        Built with Python • Flask • SQLite
+    </div>
+
+</footer>
+
+
+
+        </main>
+
+    </div>
+
+
+    <!-- =========================
+         CURRENT DATE
+    ========================= -->
+
+    <script>
+
+        const dateElement =
+            document.getElementById("currentDate");
+
+
+        if (dateElement) {
+
+            const today =
+                new Date();
+
+
+            const options = {
+                weekday: "short",
+                year: "numeric",
+                month: "short",
+                day: "numeric"
+            };
+
+
+            dateElement.textContent =
+                today.toLocaleDateString(
+                    "en-US",
+                    options
+                );
+
+        }
+
+    </script>
+
+
+    {% block scripts %}
+
+    {% endblock %}
+
+
+</body>
+
+</html>
